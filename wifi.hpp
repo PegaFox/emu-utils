@@ -1,0 +1,6 @@
+#ifndef EMU_UTILS_WIFI_HPP
+#define EMU_UTILS_WIFI_HPP
+
+
+
+#endif // EMU_UTILS_WIFI_HPP

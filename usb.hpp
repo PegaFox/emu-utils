@@ -1,0 +1,6 @@
+#ifndef EMU_UTILS_USB_HPP
+#define EMU_UTILS_USB_HPP
+
+
+
+#endif // EMU_UTILS_USB_HPP
