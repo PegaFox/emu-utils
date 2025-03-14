@@ -1,6 +1,8 @@
 #ifndef EMU_UTILS_ROM_HPP
 #define EMU_UTILS_ROM_HPP
 
+#include "external_device.hpp"
+
 template <uint32_t size>
 class ROM: public ExternalDevice<uint16_t>
 {

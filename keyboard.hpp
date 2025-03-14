@@ -1,6 +1,11 @@
 #ifndef MENU_UTILS_KEYBOARD_HPP
 #define MENU_UTILS_KEYBOARD_HPP
 
+#include <array>
+#include <deque>
+#include <SFML/Window/Keyboard.hpp>
+#include "external_device.hpp"
+
 // uses two bytes
 // read byte 1: pops and returns the first scancode in the event queue, if the event queue is empty, the response is zero.
 // write byte 1: sends an instruction to the keyboard, if the instruction is a request, the response is stored at byte 2.

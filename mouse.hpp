@@ -1,6 +1,9 @@
 #ifndef EMU_UTILS_MOUSE_HPP
 #define EMU_UTILS_MOUSE_HPP
 
+#include <SFML/Window/Mouse.hpp>
+#include "external_device.hpp"
+
 // uses four bytes
 // byte 1: zero, zero, Y sign, X sign, one, middle button, right button, left button
 // byte 2: X delta

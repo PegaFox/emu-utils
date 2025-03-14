@@ -1,6 +1,11 @@
 #ifndef MENU_UTILS_HDD_HPP
 #define MENU_UTILS_HDD_HPP
 
+#include <string>
+#include <vector>
+#include <fstream>
+#include "external_device.hpp"
+
 // uses seven bytes
 // read/write bytes 1-4: access the selected block.
 // read/write byte 5: access the selected word.

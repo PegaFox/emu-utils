@@ -1,53 +1,58 @@
 #ifndef MENU_UTILS_GAMEPAD_HPP
 #define MENU_UTILS_GAMEPAD_HPP
 
-class Gamepad : public ExternalDevice {
+#include <SFML/Window/Keyboard.hpp>
+#include <SFML/Window/Joystick.hpp>
+#include "external_device.hpp"
+
+template <typename size_type>
+class Gamepad : public ExternalDevice<size_type> {
   public:
 
-    Gamepad(uint8_t pin) : pin{pin} {
+    Gamepad() {
 
     }
 
-    virtual void update() {}
+    void update() {}
 
-    virtual void input(uint8_t* outputPins) {}
+    virtual void write(size_type position, uint8_t value) {}
 
-    virtual void output(uint8_t* inputPins) {
-      inputPins[pin] = 0;
+    virtual uint8_t read(size_type position) {
+      uint8_t value = 0;
 
-      inputPins[pin] |= (int)sf::Keyboard::isKeyPressed(sf::Keyboard::W) * 0x20;
-      inputPins[pin] |= (int)sf::Keyboard::isKeyPressed(sf::Keyboard::S) * 0x10;
-      inputPins[pin] |= (int)sf::Keyboard::isKeyPressed(sf::Keyboard::A) * 0x80;
-      inputPins[pin] |= (int)sf::Keyboard::isKeyPressed(sf::Keyboard::D) * 0x40;
+      value |= (int)sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) * 0x20;
+      value |= (int)sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) * 0x10;
+      value |= (int)sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) * 0x80;
+      value |= (int)sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) * 0x40;
 
-      inputPins[pin] |= (int)sf::Keyboard::isKeyPressed(sf::Keyboard::Up) * 0x20;
-      inputPins[pin] |= (int)sf::Keyboard::isKeyPressed(sf::Keyboard::Down) * 0x10;
-      inputPins[pin] |= (int)sf::Keyboard::isKeyPressed(sf::Keyboard::Left) * 0x80;
-      inputPins[pin] |= (int)sf::Keyboard::isKeyPressed(sf::Keyboard::Right) * 0x40;
+      value |= (int)sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up) * 0x20;
+      value |= (int)sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down) * 0x10;
+      value |= (int)sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left) * 0x80;
+      value |= (int)sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right) * 0x40;
 
-      inputPins[pin] |= (int)sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) * 0x08;
-      inputPins[pin] |= (int)sf::Keyboard::isKeyPressed(sf::Keyboard::Space) * 0x04;
+      value |= (int)sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift) * 0x08;
+      value |= (int)sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) * 0x04;
 
-      inputPins[pin] |= (int)sf::Keyboard::isKeyPressed(sf::Keyboard::J) * 0x02;
-      inputPins[pin] |= (int)sf::Keyboard::isKeyPressed(sf::Keyboard::K) * 0x01;
+      value |= (int)sf::Keyboard::isKeyPressed(sf::Keyboard::Key::J) * 0x02;
+      value |= (int)sf::Keyboard::isKeyPressed(sf::Keyboard::Key::K) * 0x01;
 
 
       sf::Joystick::update();
       for (uint8_t j = 0; j < sf::Joystick::Count; j++) {
         if (!sf::Joystick::isConnected(j)) break;
 
-        if (sf::Joystick::hasAxis(j, sf::Joystick::X) && sf::Joystick::hasAxis(j, sf::Joystick::Y)) {
+        if (sf::Joystick::hasAxis(j, sf::Joystick::Axis::X) && sf::Joystick::hasAxis(j, sf::Joystick::Axis::Y)) {
 
-          inputPins[pin] += int((sf::Joystick::getAxisPosition(j, sf::Joystick::X) * 0.01) * 0x70);
-          inputPins[pin] += int((sf::Joystick::getAxisPosition(j, sf::Joystick::Y) * 0.01) * 0x7);
+          value += int((sf::Joystick::getAxisPosition(j, sf::Joystick::Axis::X) * 0.01) * 0x70);
+          value += int((sf::Joystick::getAxisPosition(j, sf::Joystick::Axis::Y) * 0.01) * 0x7);
 
         }
       }
       
+      return value;
     }
 
   private:
-    uint8_t pin;
 };
 
 #endif // MENU_UTILS_GAMEPAD_HPP

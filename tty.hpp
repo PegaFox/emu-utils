@@ -1,6 +1,9 @@
 #ifndef EMU_UTILS_TTY_HPP
 #define EMU_UTILS_TTY_HPP
 
+#include <iostream>
+#include "external_device.hpp"
+
 // just uses a single byte for inputting characters
 class TTY: public ExternalDevice<uint16_t>
 {

@@ -1,12 +1,19 @@
 #ifndef EMU_UTILS_DISPLAY_HPP
 #define EMU_UTILS_DISPLAY_HPP
 
+#include <cstdint>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Image.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include "external_device.hpp"
+
 class Display: public ExternalDevice<uint16_t>
 {
   public:
     Display(uint16_t width, uint16_t height): width(width), height(height)
     {
-      buffer.create(width, height, sf::Color::Transparent);
+      buffer = sf::Image(sf::Vector2u(width, height), sf::Color::Transparent);
     }
 
     virtual uint8_t read(uint16_t position)
@@ -21,11 +28,11 @@ class Display: public ExternalDevice<uint16_t>
       switch (operation.opcode)
       {
         case Fill:
-          buffer.create(width, height, sf::Color(value & 0xE0, (value & 0x1C) << 3, (value & 0x03) << 6));
+          buffer = sf::Image(sf::Vector2u(width, height), sf::Color(value & 0xE0, (value & 0x1C) << 3, (value & 0x03) << 6));
           operation.opcode = None;
           break;
         case SetPixel:
-          buffer.setPixel(operation.x, operation.y, sf::Color(value & 0xE0, (value & 0x1C) << 3, (value & 0x03) << 6));
+          buffer.setPixel(sf::Vector2u(operation.x, operation.y), sf::Color(value & 0xE0, (value & 0x1C) << 3, (value & 0x03) << 6));
           operation.opcode = None;
           break;
         case DrawRect:
@@ -33,7 +40,7 @@ class Display: public ExternalDevice<uint16_t>
           {
             for (uint16_t y = operation.y; y < operation.y + operation.height; y++)
             {
-              buffer.setPixel(x, y, sf::Color(value & 0xE0, (value & 0x1C) << 3, (value & 0x03) << 6));
+              buffer.setPixel(sf::Vector2u(x, y), sf::Color(value & 0xE0, (value & 0x1C) << 3, (value & 0x03) << 6));
             }
           }
           operation.opcode = None;
@@ -43,14 +50,7 @@ class Display: public ExternalDevice<uint16_t>
 
     void update()
     {
-      clock60hz.get_fps(false);
-      if (clock60hz.deltaTime < 1.0f/60.0f)
-      {
-        return;
-      }
-
-      sf::Event event;
-      while (SCREEN.pollEvent(event))
+      while (SCREEN.pollEvent())
       {
 
       }
@@ -59,8 +59,7 @@ class Display: public ExternalDevice<uint16_t>
       sprite.setTexture(texture);
       SCREEN.draw(sprite);
 
-      SCREEN.clear(sf::Color(clock60hz.frameCount << 8));
-      std::cout << clock60hz.frameCount << '\n';
+      SCREEN.clear();
 
       SCREEN.display();
     }
@@ -77,10 +76,10 @@ class Display: public ExternalDevice<uint16_t>
     {
       Command opcode;
       uint8_t color;
-      Fhalf x = Fhalf(0.0f);
-      Fhalf y = Fhalf(0.0f);
-      Fhalf width = Fhalf(0.0f);
-      Fhalf height = Fhalf(0.0f);
+      float x = 0.0f;
+      float y = 0.0f;
+      float width = 0.0f;
+      float height = 0.0f;
     } operation;
 
     uint16_t width;
@@ -88,9 +87,9 @@ class Display: public ExternalDevice<uint16_t>
 
     sf::Image buffer;
     sf::Texture texture;
-    sf::Sprite sprite;
+    sf::Sprite sprite = sf::Sprite(texture);
 
-    sf::RenderWindow SCREEN = sf::RenderWindow(sf::VideoMode(width, height), "video output", sf::Style::Titlebar);
+    sf::RenderWindow SCREEN = sf::RenderWindow(sf::VideoMode(sf::Vector2u(width, height)), "video output", sf::Style::Titlebar);
 };
 
 #endif // EMU_UTILS_DISPLAY_HPP

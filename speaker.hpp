@@ -1,6 +1,10 @@
 #ifndef EMU_UTILS_SPEAKER_HPP
 #define EMU_UTILS_SPEAKER_HPP
 
+#include <iostream>
+#include <SFML/Audio.hpp>
+#include "external_device.hpp"
+
 // has three write-only bytes used for communication, the first two are data bytes, the third is a mode byte
 class Speaker: public ExternalDevice<uint16_t>
 {

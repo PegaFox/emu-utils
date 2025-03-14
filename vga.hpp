@@ -1,6 +1,12 @@
 #ifndef EMU_UTILS_VGA_HPP
 #define EMU_UTILS_VGA_HPP
 
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Image.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include "external_device.hpp"
+
 // uses six bytes
 // write byte 1: send opcode. This should be done after setting any parameters.
 // write bytes 2-4: set parameters/set vram access pointer.

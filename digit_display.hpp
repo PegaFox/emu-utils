@@ -10,19 +10,19 @@ class DigitDisplay: public ExternalDevice<size_type>
 {
   public:
 
-    DigitDisplay(uint8_t pin) : pin{pin}
+    DigitDisplay()
     {
 
     }
 
-    virtual void update()
+    void update()
     {
 
     }
 
     virtual uint8_t read(size_type position)
     {
-
+      return 0;
     }
 
     virtual void write(size_type position, uint8_t value)
