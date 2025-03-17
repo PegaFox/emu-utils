@@ -13,16 +13,32 @@
 class HDD: public ExternalDevice<uint16_t>
 {
   public:
-    HDD(const std::string& filename)
+    HDD(const std::string& filename, uint32_t minBlockCount = 0): filename(filename)
     {
       std::filebuf drive;
       drive.open(filename, std::ios::in | std::ios::binary);
 
       if (drive.is_open())
       {
-        data.resize(drive.in_avail() >> 9);
+        data.resize(glm::max(drive.in_avail() >> 9, (std::streamsize)minBlockCount));
 
         drive.sgetn((char*)data.data(), data.size() << 9);
+        drive.close();
+      } else
+      {
+        data.resize(minBlockCount);
+      }
+    }
+
+    ~HDD()
+    {
+      std::filebuf drive;
+      drive.open(filename, std::ios::out | std::ios::binary);
+
+      if (drive.is_open())
+      {
+        drive.sputn((char*)data.data(), data.size() << 9);
+
         drive.close();
       }
     }
@@ -86,6 +102,8 @@ class HDD: public ExternalDevice<uint16_t>
   private:
     uint32_t selectedBlock = 0;
     uint8_t wordOffset = 0;
+
+    std::string filename;
 
     std::vector<std::array<uint8_t, 512>> data;
 };
