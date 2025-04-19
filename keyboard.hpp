@@ -28,14 +28,10 @@ class Keyboard: public ExternalDevice<uint16_t>
           return 0;
         }
 
+        uint8_t event = eventQueue.front();
         eventQueue.pop_front();
 
-        if (eventQueue.empty())
-        {
-          return 0;
-        }
-
-        return eventQueue.front();
+        return event;
       }
 
       uint8_t value = response;
