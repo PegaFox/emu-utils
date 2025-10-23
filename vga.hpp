@@ -6,6 +6,7 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include "external_device.hpp"
+//#include <iostream>
 
 // uses six bytes
 // write byte 1: send opcode. This should be done after setting any parameters.
@@ -109,14 +110,16 @@ class VGA: public ExternalDevice<uint16_t>
                   sf::Color currentColor = framebuffer.getPixel(pos);
                   currentColor.g = (currentColor.g & 0x3F) | ((value & 0x3) << 6);
                   currentColor.b = (value & 0x7C) >> 2;
-                  currentColor.a = value & 0x80;
+                  currentColor.a = bool(value & 0x80) * 255;
                   framebuffer.setPixel(pos, currentColor);
+                  //std::cout << "wroteFirst " << (int)value << " to (" << pos.x << ", " << pos.y << ") (" << (int)currentColor.r << ", " << (int)currentColor.g << ", " << (int)currentColor.b << ", " << (int)currentColor.a << ")\n";
                 } else
                 {
                   sf::Color currentColor = framebuffer.getPixel(pos);
                   currentColor.r = value & 0x1F;
                   currentColor.g = (currentColor.g & 0xF7) | ((value & 0xE0) >> 5);
                   framebuffer.setPixel(pos, currentColor);
+                  //std::cout << "wroteSecond " << (int)value << " to (" << pos.x << ", " << pos.y << ") (" << (int)currentColor.r << ", " << (int)currentColor.g << ", " << (int)currentColor.b << ", " << (int)currentColor.a << ")\n";
                 }
                 break;
               case 3:
