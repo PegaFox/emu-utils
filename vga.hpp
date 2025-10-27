@@ -24,7 +24,7 @@ class VGA: public ExternalDevice<uint16_t>
         if (position < 4)
         {
           return framebufferPointer >> ((position-1)*8);
-        } else
+        } else if (framebufferPointer < framebuffer.getSize().x * framebuffer.getSize().y * bytesPerPixel)
         {
           sf::Vector2u pos((framebufferPointer/bytesPerPixel) % framebuffer.getSize().x, (framebufferPointer/bytesPerPixel) / framebuffer.getSize().x);
           switch (bytesPerPixel)
@@ -96,7 +96,7 @@ class VGA: public ExternalDevice<uint16_t>
           if (position < 4)
           {
             framebufferPointer = (framebufferPointer & ~(0xFF << ((position-1)*8))) | (uint32_t)value << ((position-1)*8);
-          } else
+          } else if (framebufferPointer < framebuffer.getSize().x * framebuffer.getSize().y * bytesPerPixel)
           {
             sf::Vector2u pos((framebufferPointer/bytesPerPixel) % framebuffer.getSize().x, (framebufferPointer/bytesPerPixel) / framebuffer.getSize().x);
             switch (bytesPerPixel)

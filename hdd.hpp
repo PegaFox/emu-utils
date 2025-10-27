@@ -58,9 +58,9 @@ class HDD: public ExternalDevice<uint16_t>
           return selectedBlock >> 24;
         case 4:
           return wordOffset;
-        case 6:
+        case 5:
           return data[selectedBlock][(uint16_t)wordOffset << 1];
-        case 7:
+        case 6:
           return data[selectedBlock][((uint16_t)wordOffset << 1) + 1];
       }
       return 0;
@@ -85,11 +85,11 @@ class HDD: public ExternalDevice<uint16_t>
         case 4:
           wordOffset = value;
           break;
-        case 6:
+        case 5:
           data[selectedBlock][(uint16_t)wordOffset << 1] = value;
           //std::cout << "write " << (int)value << " to block " << selectedBlock << ", offset " << ((uint16_t)wordOffset << 1) << "\n";
           break;
-        case 7:
+        case 6:
           data[selectedBlock][((uint16_t)wordOffset << 1) + 1] = value;
           //std::cout << "write " << (int)value << " to block " << selectedBlock << ", offset " << (((uint16_t)wordOffset << 1) + 1) << "\n";
           break;
